@@ -3,9 +3,9 @@
 using namespace std;
 
 class node {
-public:
-  int data;
-  node *next;
+  public:
+    int data;
+    node *next;
 };
 
 bool hasCycle(node *head) {
@@ -15,7 +15,7 @@ bool hasCycle(node *head) {
   set<node *> s;
   while (head) {
     // auto res = s.insert(head);
-    if (s.insert(head).second == false) // Failed to add duplicate value/address.
+    if (s.insert(head).second == false) // Failed to add duplicate value / address.
       return true;
     head = head->next;
   }
