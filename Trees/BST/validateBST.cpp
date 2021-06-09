@@ -44,6 +44,26 @@ bool isValidBST(TreeNode *root)
   return true;
 }
 
+// Space optimized Method 1 - O(1) space.
+TreeNode *previous = NULL;
+bool isValidBST(TreeNode *root)
+{
+  if (root == nullptr)
+    return true;
+
+  bool curr = true;
+  bool left = isValidBST(root->left);
+  if (previous and previous->val >= root->val)
+    curr = false;
+  previous = root;
+  bool right = isValidBST(root->right);
+
+  if (curr and left and right)
+    return true;
+
+  return false;
+}
+
 // Method 2: by comparing max from left and min from right with present node (for every node).
 bool isValidBST(TreeNode *root)
 {
