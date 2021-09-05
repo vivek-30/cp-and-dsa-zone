@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define null NULL
+#define endl "\n"
+#define inf INT_MAX
+#define minf INT_MIN
+#define mod 1000000007
+#define ll long long int
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef pair<int,string> pis;
+typedef pair<string,int> psi;
+typedef pair<string,string> pss;
+typedef vector<pii > vii;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+typedef vector<string> vs;
+typedef vector<vi > vvi;
+typedef vector<vll > vvll;
+typedef map<int, int> mii;
+typedef map<string, string> mss;
+typedef map<int, string> mis;
+typedef map<string, int> msi;
+#define mid(l, r) (l + (r - l) / 2)
+#define f(i,s,n) for(ll i = s; i <= n; i++)
+#define fr(i,s,e) for(ll i = s; i >= e; i--)
+#define mp make_pair
+#define pb push_back
+#define ump unordered_map
+#define pqmax priority_queue<int, vi>
+#define pqmin priority_queue<int, vi, greater<int> >
+#define fi first
+#define se second
+#define INF 2e18
+
+bool solve(ll &k, ll &l, ll &coins) {
+  
+  vector<bool> dp(1000005, false);
+  
+  dp[1] = true;
+  dp[k] = true;
+  dp[l] = true;
+
+  f(i, 2, coins) {
+    dp[i] = !(dp[i-1] and ((i - k) >= 0 ? dp[i-k] : true) and ((i - l) >= 0 ? dp[i-l] : true));
+  }
+
+  return dp[coins];
+}
+
+int main() {
+
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  ll k, l, m;
+  cin>>k>>l>>m;
+
+  ll coins;
+  string res = "";
+  while(m--) {
+    cin>>coins;
+    if(solve(k, l, coins)) {
+      res += "A";
+    }
+    else res += "B";
+  }
+
+  cout<<res<<endl;
+
+  return 0;
+}
