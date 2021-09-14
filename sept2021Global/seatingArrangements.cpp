@@ -38,6 +38,23 @@ typedef map<string, int> msi;
 
 vi arr;
 
+void solve(int &n, int &m) {
+
+  ll ans = 0;
+  map<int, int> mp;
+
+  f(i, 0, (n*m)-1) {
+    mp[arr[i]]++;
+    auto it = mp.begin();
+    while(it != mp.end() && it->fi < arr[i]) {
+      ans += it->se;
+      it++;
+    }
+  }
+
+  cout<<ans<<endl;
+}
+
 int main() {
 
   ios_base::sync_with_stdio(0);
@@ -51,14 +68,16 @@ int main() {
   
   clock_t begin = clock();
 
-  ll t;
+  int t;
   cin>>t;
+
   f(i, 1, t) {
-    int n;
-    cin>>n;
-    arr.assign(n, -1);
-    f(j, 0, n-1) cin>>arr[j];
-    logarr(arr, 0, n-1);
+    int n, m;
+    cin>>n>>m;
+    arr.assign(n*m, -1);
+
+    f(j, 0, (n*m)-1) cin>>arr[j];
+    solve(n, m);
   }
 
   #ifndef ONLINE_JUDGE
