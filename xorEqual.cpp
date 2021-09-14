@@ -34,47 +34,31 @@ typedef map<string, int> msi;
 #define se second
 #define INF 2e18
 
-void solve(ll &n, ll &x, vll &arr) {
+void solve(int &n, int &x, vi &arr) {
 
-  if(n == 1) {
-    cout<<1<<" "<<0<<endl;
-    return;
-  }
-
-  ll xr;
-
-  map<ll, pll> m;
+  map<int, int> m;
+  int maxAns = minf, minAns = 0;
 
   f(i, 0, n-1) {
-    
-    xr = (arr[i] ^ x);
-    
-    if(m.count(arr[i])) {
-      m[arr[i]].fi++;
-    }
-    else {
-      m[arr[i]] = mp(1, 0);
-    }
-    
-    if(m.count(xr)) {
-      m[xr].fi++;
-      m[xr].se++;
-    } else {
-      m[xr] = mp(1, 1);
-    }
+    m[arr[i]]++;
+    maxAns = max(maxAns, m[arr[i]]);
   }
 
-  ll minAns = inf, maxAns = minf;
-  for(auto it = m.begin(); it != m.end(); it++) {
-    if(it == m.begin()) {
-      maxAns = max(maxAns, (*it).se.fi);
-      minAns = min(minAns, (*it).se.se);
-    } else {
-      if((maxAns - minAns) <  (((*it).se.fi) - ((*it).se.se))) {
-        maxAns = (*it).se.fi;
-        minAns = (*it).se.se;
-      }
+  for(auto it: m) {
+    int key = it.fi, val = it.se;
+    int curr = val;
+    if(x != 0)
+      curr += m[key^x];
+    int req = val;
+
+    if(curr > maxAns) {
+      maxAns = curr;
+      minAns = req;
     }
+    else if(curr == maxAns) {
+      minAns = min(minAns, req);
+    }
+
   }
 
   cout<<maxAns<<" "<<minAns<<endl;
@@ -82,23 +66,35 @@ void solve(ll &n, ll &x, vll &arr) {
 
 int main() {
 
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
-  cout.tie(NULL);
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
+  cout.tie(0);
+
+  #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+  #endif
+  
+  clock_t begin = clock();
 
   ll t;
   cin >> t;
   f(i, 1, t) {
-    ll n, x;
+    int n, x;
     cin>>n>>x;
 
-    vll arr(n);
+    vi arr(n);
     f(j, 0, n-1) {
       cin>>arr[j];
     }
 
     solve(n, x, arr);
   }
+
+  #ifndef ONLINE_JUDGE
+    clock_t end = clock();
+    cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";
+  #endif
 
   return 0;
 }
