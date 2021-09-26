@@ -10,19 +10,19 @@ using namespace std;
 #define all(v) v.begin(), v.end()
 typedef pair<int,int> pii;
 typedef pair<ll,ll> pll;
-typedef pair<int,string> pis;
-typedef pair<string,int> psi;
-typedef pair<string,string> pss;
 typedef vector<pii > vii;
 typedef vector<int> vi;
 typedef vector<ll> vll;
 typedef vector<string> vs;
+typedef vector<bool> vb;
 typedef vector<vi > vvi;
 typedef vector<vll > vvll;
 typedef map<int, int> mii;
-typedef map<string, string> mss;
-typedef map<int, string> mis;
-typedef map<string, int> msi;
+typedef map<char, int> mci;
+template<typename... T>
+void inp(T&... args) { ((cin >> args), ...);}
+template<typename... T>
+void out(T&&... args) { ((cout << args << " "), ...);}
 #define mid(l, r) (l + (r - l) / 2)
 #define f(i, s, e) for(ll i = s; i <= e; i++)
 #define fr(i, s, e) for(ll i = s; i >= e; i--)
@@ -37,7 +37,7 @@ typedef map<string, int> msi;
 #define se second
 #define INF 2e18
 
-void solve() {
+ll solve(int n, int m, vvll &dp) {
 
 }
 
@@ -48,26 +48,28 @@ int main() {
   cout.tie(0);
 
   #ifndef ONLINE_JUDGE
-  freopen("input.txt", "r", stdin);
-  freopen("output.txt", "w", stdout);
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
   #endif
+
   clock_t begin = clock();
 
   int t;
   cin>>t;
 
   while(t--) {
-    int n;
-    cin>>n;
+    
+    int n, m, p;
+    inp(n, m, p);
 
-    if(n%4 == 0)
-      cout<<"NO"<<endl;
-    else cout<<"YES"<<endl;
+    vvll dp(n, vll(m, 0));
+
+    cout<<solve(n, m, dp)<<endl;
   }
 
   #ifndef ONLINE_JUDGE
-  clock_t end = clock();
-  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";
+    clock_t end = clock();
+    cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";
   #endif
 
   return 0;
