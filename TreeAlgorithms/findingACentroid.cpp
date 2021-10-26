@@ -40,20 +40,32 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vi g[200005];
+vi subtreeSize(200005, 0);
+int n;
 
-void solve(string s, int start, int n) {
+void getSubtreeSize(int src, int parent) {
+  subtreeSize[src] = 1;
+  
+  for(int child: g[src]) {
+    if(child == parent) continue;
 
-  if(start == n) {
-    res.insert(s);
-    return;
+    getSubtreeSize(child, src);
+    subtreeSize[src] += subtreeSize[child];
+  }
+}
+
+int solve(int src, int parent) {
+
+  for(int child: g[src]) {
+    if(child == parent) continue;
+    
+    if(subtreeSize[child] > n/2) {
+      return solve(child, src);
+    }
   }
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
-  }
+  return src;
 }
 
 int main() {
@@ -69,15 +81,18 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  inp(n);
 
-  solve(s, 0, s.sz);
-
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+  f(i, 1, n-1) {
+    int a, b;
+    inp(a, b);
+   
+    g[a].pb(b);
+    g[b].pb(a);
   }
+
+  getSubtreeSize(1, 0);
+  cout<<solve(1, 0)<<endl;
 
   #ifndef ONLINE_JUDGE
     clock_t end = clock();

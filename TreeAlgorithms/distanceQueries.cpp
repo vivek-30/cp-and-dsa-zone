@@ -40,20 +40,56 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vi g[200005];
+vi level(200005, 0);
+vvi jump(21, vi(200005, 0));
 
-void solve(string s, int start, int n) {
+void dfs(int src, int parent, int l) {
+  
+  level[src] = l;
+  jump[0][src] = parent;
 
-  if(start == n) {
-    res.insert(s);
-    return;
+  for(int child: g[src]) {
+    if(child != parent) {
+      dfs(child, src, l+1);
+    }
+  }
+}
+
+void preProcessLCA() {
+  
+  dfs(1, 0, 0);
+
+  f(i, 1, 20) {
+    f(j, 1, 200004) {
+      int parent = jump[i-1][j];
+      jump[i][j] = jump[i-1][parent];
+    }
+  }
+}
+
+int findLCA(int a, int b) {
+  
+  if(level[a] > level[b]) swap(a, b);
+
+  int diff = level[b] - level[a];
+
+  f(i, 0, 20) {
+    if(diff & (1<<i)) {
+      b = jump[i][b];
+    }
   }
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
+  if(a == b) return a;
+
+  fr(i, 20, 0) {
+    if(jump[i][a] != jump[i][b]) {
+      a = jump[i][a];
+      b = jump[i][b];
+    }
   }
+
+  return jump[0][a];
 }
 
 int main() {
@@ -69,14 +105,26 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n, q;
+  inp(n, q);
 
-  solve(s, 0, s.sz);
+  f(i, 1, n-1) {
+    int a, b;
+    inp(a, b);
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+    g[a].pb(b);
+    g[b].pb(a);
+  }
+
+  preProcessLCA();
+
+  while(q--) {
+    int a, b;
+    inp(a, b);
+
+    int lca = findLCA(a, b);
+    int ans = level[a] + level[b] - 2 * level[lca];
+    cout<<ans<<endl;
   }
 
   #ifndef ONLINE_JUDGE

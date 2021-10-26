@@ -40,20 +40,29 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vi g[200005];
+vi color(200005), ans(200005);
 
-void solve(string s, int start, int n) {
+set<int> solve(int src, int parent) {
+  
+  set<int> curr, childSet;
+  curr.insert(color[src]);
 
-  if(start == n) {
-    res.insert(s);
-    return;
+  for(int child: g[src]) {
+    if(child != parent) {
+      childSet = solve(child, src);
+      if(childSet.sz > curr.sz) {
+        swap(curr, childSet);
+      }
+      
+      for(int color: childSet) {
+        curr.insert(color);
+      }
+    }
   }
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
-  }
+  ans[src] = curr.sz;
+  return curr;
 }
 
 int main() {
@@ -69,15 +78,25 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n;
+  inp(n);
 
-  solve(s, 0, s.sz);
-
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+  f(i, 1, n) {
+    inp(color[i]);
   }
+
+  int a, b;
+
+  f(i, 1, n-1) {
+    inp(a, b);
+    g[a].pb(b);
+    g[b].pb(a);
+  }
+
+  solve(1, 0);
+
+  f(i, 1, n) cout<<ans[i]<<" ";
+  cout<<'\n'; 
 
   #ifndef ONLINE_JUDGE
     clock_t end = clock();

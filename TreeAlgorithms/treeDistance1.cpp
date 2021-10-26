@@ -40,20 +40,34 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vi g[200005];
+vi ans(200005, minf);
 
-void solve(string s, int start, int n) {
+int bfs(int src) {
 
-  if(start == n) {
-    res.insert(s);
-    return;
-  }
+  vi dist(200005, -1);
+  dist[src] = 0;
+  ans[src] = max(ans[src], dist[src]);
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
-  }
+  queue<int> q;
+  int curr;
+
+  q.push(src);
+
+  while(not q.empty()) {
+    curr = q.front();
+    q.pop();
+
+    for(int child: g[curr]) {
+      if(dist[child] == -1) {
+        q.push(child);
+        dist[child] = dist[curr]+1;
+        ans[child] = max(dist[child], ans[child]);
+      }
+    }
+  } 
+
+  return curr;
 }
 
 int main() {
@@ -69,15 +83,24 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n, a, b;
+  inp(n);
 
-  solve(s, 0, s.sz);
+  f(i, 1, n-1) {
+    inp(a, b);
+    g[a].pb(b);
+    g[b].pb(a);
+  }  
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+  int end1 = bfs(1);
+  int end2 = bfs(end1);
+  bfs(end2);
+
+  f(i, 1, n) { 
+    cout<<ans[i]<<" ";
   }
+
+  cout<<endl;
 
   #ifndef ONLINE_JUDGE
     clock_t end = clock();

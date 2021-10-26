@@ -40,19 +40,29 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vi g[200005];
+int level[200005];
+int jump[200005][21];
 
-void solve(string s, int start, int n) {
+void solve(int src, int parent, int l) {
+  level[src] = l;
+  jump[src][0] = parent;
 
-  if(start == n) {
-    res.insert(s);
-    return;
+  for(int child: g[src]) {
+    if(child == parent) continue;
+
+    solve(child, src, l+1);
   }
+}
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
+void preProcessLCA() {
+  solve(1, 0, 0);
+
+  f(i, 1, 200004) {
+    f(j, 1, 20) {
+      int parent = jump[i][j-1];
+      jump[i][j] = jump[parent][j-1];
+    }
   }
 }
 
@@ -69,14 +79,45 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n, q;
+  inp(n, q);
 
-  solve(s, 0, s.sz);
+  f(i, 2, n) {
+    int e;
+    inp(e);
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+    g[e].pb(i);
+    g[i].pb(e);
+  }
+
+  preProcessLCA();
+
+  while(q--) {
+    int a, b;
+    inp(a, b);
+
+    if(level[a] > level[b]) swap(a, b);
+
+    int extra = level[b] - level[a];
+    f(i, 0, 20) {
+      if(extra & (1<<i)) {
+        b = jump[b][i];
+      }
+    }
+
+    if(a == b) {
+      cout<<a<<endl;
+      continue;
+    }
+
+    fr(i, 20, 0) {
+      if(jump[a][i] != jump[b][i]) {
+        a = jump[a][i];
+        b = jump[b][i];
+      }
+    }
+
+    cout<<jump[a][0]<<endl;
   }
 
   #ifndef ONLINE_JUDGE

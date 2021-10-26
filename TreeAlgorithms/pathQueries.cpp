@@ -40,20 +40,37 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vi g[200005];
+vi val(200005), start(200005), finish(200005);
+vll FT(200005);
 
-void solve(string s, int start, int n) {
+int n, q, timer = 0;
 
-  if(start == n) {
-    res.insert(s);
-    return;
+void update(int i, int val) {
+  for(; i<=n; i += i&(-i))
+    FT[i] += val;
+}
+
+ll query(int i) {
+  
+  ll sum = 0;
+  for(; i > 0; i -= i&(-i))
+    sum += FT[i];
+
+  return sum;
+}
+
+void dfs(int src, int parent) {
+
+  start[src] = ++timer;
+  update(timer, val[src]);
+
+  for(int child: g[src]) {
+    if(child != parent) dfs(child, src);
   }
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
-  }
+  finish[src] = timer;
+  update(timer+1, -val[src]);
 }
 
 int main() {
@@ -69,14 +86,33 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  inp(n, q);
 
-  solve(s, 0, s.sz);
+  f(i, 1, n) inp(val[i]);
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+  f(i, 1, n-1) {
+    int a, b;
+    inp(a, b);
+
+    g[a].pb(b);
+    g[b].pb(a);
+  }
+
+  dfs(1, 0);
+
+  f(i, 1, q) {
+    int qt, s, x;
+    inp(qt, s);
+
+    if(qt == 1) {
+      inp(x);
+
+      update(start[s], x - val[s]);
+      update(finish[s]+1, -(x - val[s]));
+      val[s] = x;
+    } else {
+      cout<<query(start[s])<<endl;
+    }
   }
 
   #ifndef ONLINE_JUDGE

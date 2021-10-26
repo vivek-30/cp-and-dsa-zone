@@ -40,20 +40,24 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vll fact(1000005, 0), inv(1000005, 0);
 
-void solve(string s, int start, int n) {
-
-  if(start == n) {
-    res.insert(s);
-    return;
+ll exp(ll a, ll b) {
+  ll res = 1;
+  while(b) {
+    if(b&1) res = (res%mod * a%mod)%mod;
+    b >>= 1;
+    a = (a%mod * a%mod)%mod;
   }
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
-  }
+  return res;
+}
+
+ll catlan(int n) {
+  // Using Analytical Formula
+  ll num = (((fact[2*n]*inv[n])%mod)*inv[n])%mod;
+  num = (num * exp(n+1, mod-2)) % mod;
+  return num;
 }
 
 int main() {
@@ -69,14 +73,20 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n;
+  inp(n);
 
-  solve(s, 0, s.sz);
+  if(n&1) cout<<0<<endl;
+  else {
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+    fact[0] = inv[0] = 1;
+    f(i, 1, 1000004) {
+      fact[i] = (fact[i-1]*i)%mod;
+      inv[i] = exp(fact[i], mod-2);
+    }
+
+    n >>= 1;
+    cout<<catlan(n)<<endl;
   }
 
   #ifndef ONLINE_JUDGE

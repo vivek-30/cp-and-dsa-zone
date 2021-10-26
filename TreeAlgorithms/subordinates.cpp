@@ -40,20 +40,19 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vi g[200001];
+vi res(200001, 0);
 
-void solve(string s, int start, int n) {
+void solve(int src) {
+  
+  int ans = 0;
 
-  if(start == n) {
-    res.insert(s);
-    return;
+  for(int child: g[src]) {
+    solve(child);
+    ans += (1 + res[child]);
   }
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
-  }
+  res[src] = ans;
 }
 
 int main() {
@@ -69,15 +68,20 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n, x;
+  inp(n);
 
-  solve(s, 0, s.sz);
-
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+  f(i, 2, n) {
+    inp(x);
+    g[x].pb(i);
   }
+
+  solve(1);
+  f(i, 1, n) {
+    cout<<res[i]<<" ";
+  }
+
+  cout<<endl;
 
   #ifndef ONLINE_JUDGE
     clock_t end = clock();

@@ -40,20 +40,31 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+vi g[200005];
 
-void solve(string s, int start, int n) {
+pii bfs(int src) {
 
-  if(start == n) {
-    res.insert(s);
-    return;
-  }
+  vb visited(200005, false); 
+  visited[src] = true;
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
-  }
+  queue<pii > q;
+  pii curr = mp(src, 0);
+
+  q.push(curr);
+
+  while(not q.empty()) {
+    curr = q.front();
+    q.pop();
+
+    for(int child: g[curr.fi]) {
+      if(not visited[child]) {
+        q.push(mp(child, curr.se + 1));
+        visited[child] = true;
+      }
+    }
+  } 
+
+  return curr;
 }
 
 int main() {
@@ -69,15 +80,19 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n, a, b;
+  inp(n);
 
-  solve(s, 0, s.sz);
+  f(i, 1, n-1) {
+    inp(a, b);
+    g[a].pb(b);
+    g[b].pb(a);
+  }  
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
-  }
+  pii end1 = bfs(1);
+  pii end2 = bfs(end1.fi);
+  cout<<end2.se<<endl;
+  
 
   #ifndef ONLINE_JUDGE
     clock_t end = clock();

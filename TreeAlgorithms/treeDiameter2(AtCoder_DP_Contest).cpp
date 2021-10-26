@@ -40,20 +40,22 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+// AtCoder DP Contest (G - Longest Path)
 
-void solve(string s, int start, int n) {
+vi g[200005];
+vi dp(200005, -1);
 
-  if(start == n) {
-    res.insert(s);
-    return;
+int solve(int src) {
+  if(dp[src] != -1) return dp[src];
+
+  int mx = minf;
+  bool leaf = true;
+  for(int child: g[src]) {
+    leaf = false;
+    mx = max(mx, solve(child));
   }
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
-  }
+  return dp[src] = leaf ? 0 : 1+mx;
 }
 
 int main() {
@@ -69,14 +71,17 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n, a, b;
+  inp(n);
 
-  solve(s, 0, s.sz);
+  f(i, 1, n-1) {
+    inp(a, b);
+    g[a].pb(b);
+  }  
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+  int ans = minf;
+  f(i, 1, n) {
+    ans = max(ans, solve(i));
   }
 
   #ifndef ONLINE_JUDGE

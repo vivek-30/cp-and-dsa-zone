@@ -40,19 +40,34 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+#define MAX 200005
 
-void solve(string s, int start, int n) {
+vi g[MAX];
+vi level(MAX, 0);
+int jump[MAX][21];
 
-  if(start == n) {
-    res.insert(s);
-    return;
+void solve(int src, int parent, int l) {
+  
+  jump[src][0] = parent;
+  level[src] = l;
+
+  for(int child: g[src]) {
+    if(child != parent) {
+      solve(child, src, l+1);
+    }
   }
+}
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
+void preProcessLCA() {
+  
+  solve(1, 0, 0);
+  int parent;
+
+  f(i, 1, MAX-1) {
+    f(j, 1, 20) {
+      parent = jump[i][j-1];
+      jump[i][j] = jump[parent][j-1];
+    }
   }
 }
 
@@ -69,14 +84,36 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n, q;
+  inp(n, q);
 
-  solve(s, 0, s.sz);
+  f(i, 2, n) {
+    int e;
+    inp(e);
+   
+    g[e].pb(i);
+    g[i].pb(e);
+  }
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+  preProcessLCA();
+
+  f(i, 1, q) {
+    int x, k;
+    inp(x, k);
+
+    int boss = x;
+
+    f(j, 0, 20) {
+      if(k & (1<<j)) {
+        boss = jump[boss][j];
+      }
+    }
+
+    if(boss == 0) {
+      boss = -1;
+    }
+
+    cout<<boss<<endl;
   }
 
   #ifndef ONLINE_JUDGE

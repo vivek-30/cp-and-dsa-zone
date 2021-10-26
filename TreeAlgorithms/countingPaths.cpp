@@ -40,19 +40,64 @@ void out(T&&... args) { ((cout << args << " "), ...);}
 #define se second
 #define INF 2e18
 
-set<string> res;
+// Algorithm Used "Difference Array Range Update Query In O(1)"    (GFG)
 
-void solve(string s, int start, int n) {
+vi g[200005];
+int jump[21][200005];
+vi path(200005, 0), level(200005, 0);
 
-  if(start == n) {
-    res.insert(s);
-    return;
+void dfs(int src, int parent, int l) {
+
+  jump[0][src] = parent;
+  level[src] = l;
+
+  for(int child: g[src]) {
+    if(child != parent) {
+      dfs(child, src, l+1);
+    }
+  }
+}
+
+void preProcessLCA() {
+  dfs(1, 0, 0);
+
+  f(i, 1, 20) {
+    f(j, 1, 200004) {
+      jump[i][j] = jump[i-1][jump[i-1][j]];
+    }
+  }
+}
+
+int findLCA(int a, int b) {
+
+  if(level[a] > level[b]) swap(a, b);
+
+  int diff = level[b] - level[a];
+
+  f(i, 0, 20) {
+    if(diff & (1<<i)) {
+      b = jump[i][b];
+    }
   }
 
-  f(i, start, n-1) {
-    swap(s[start], s[i]);
-    solve(s, start+1, n);
-    swap(s[start], s[i]);
+  if(a == b) return a;
+
+  fr(i, 20, 0) {
+    if(jump[i][a] != jump[i][b]) {
+      a = jump[i][a];
+      b = jump[i][b];
+    }
+  }
+
+  return jump[0][a];
+}
+
+void solve(int src, int parent) {
+  for(int child: g[src]) {
+    if(child != parent) {
+      solve(child, src);
+      path[src] += path[child];
+    }
   }
 }
 
@@ -69,15 +114,38 @@ int main() {
 
   clock_t begin = clock();
 
-  string s;
-  inp(s);
+  int n, m;
+  inp(n, m);
 
-  solve(s, 0, s.sz);
+  f(i, 1, n-1) {
+    int a, b;
+    inp(a, b);
 
-  cout<<res.sz<<endl;
-  for(string t: res) {
-    cout<<t<<endl;
+    g[a].pb(b);
+    g[b].pb(a);
   }
+
+  preProcessLCA();
+
+  f(i, 1, m) {
+    int a, b;
+    inp(a, b);
+
+    int LCA = findLCA(a, b);
+    int parentLCA = jump[0][LCA];
+
+    path[a]++;
+    path[b]++;
+    path[LCA]--;
+    path[parentLCA]--;
+  }
+
+  solve(1, 0);
+
+  f(i, 1, n) {
+    cout<<path[i]<<" ";
+  }
+  cout<<endl;
 
   #ifndef ONLINE_JUDGE
     clock_t end = clock();
