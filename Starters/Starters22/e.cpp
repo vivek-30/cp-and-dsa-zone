@@ -44,60 +44,20 @@ void solve() {
   int n;
   inp(n);
 
-  if(n == 2) {
-    pn
-    return;
-  }
-
-  py
-  if(n == 3) {
-    out("1 3 2\n");
-    return;
-  }
-
-  if(n%2 == 0) {
-    int k = n/2;
-    fr(i, n, k+1) {
-      out(i, ' ');
-    } 
-
-    f(i, 1, k) {
-      out(i, ' ');
-    }
-    out('\n');
-  }
+  if(n == 2) pn
   else {
-    vi res(n);
-    int big = n, small = 1, i = 0, j = n-1;
-    bool flag = true; 
+    py
 
-    while(i != j) {
-
-      if(i == j) {
-        res[i] = big;
-        break;
-      }
-
-      if(flag) {
-        res[i] = big;
-        res[j] = small;
-      }
-      else {
-        res[i] = small;
-        res[j] = big;
-      }
-
-      flag = !flag;
-
-      big--;
-      small++;
-      i++;
-      j--;
+    if(n&1) {
+      f(i, 1, n/2) out(i, ' ');
+      fr(i, n, n/2+1) out(i, ' ');
+    } else {
+      f(i, 2, n/2) out(i, ' ');
+      out("1 ");
+      fr(i, n, n/2+1) out(i, ' ');
     }
 
-    res[i] = big;
-
-    logarr(0, n-1, res);
+    out('\n');
   }
 }
 
