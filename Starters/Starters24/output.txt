@@ -1,0 +1,9 @@
+res = 5
+sum = 4.5
+res = 198
+sum = 100
+res = 1
+sum = 1.5
+
+
+Executed In: 0.315 ms
