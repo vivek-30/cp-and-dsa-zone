@@ -26,7 +26,7 @@ void out(T&&... args) { ((cout << args), ...);}
 #define f(i, s, e) for(ll i = s; i <= e; i++)
 #define fr(i, s, e) for(ll i = s; i >= e; i--)
 #define logarr(s, e, arr) for(int i = s; i <= e; i++) cout << arr[i] << " ";  cout << "\n";
-#define bitc(n) __builtin_popcount(n)
+#define bitc(n) __builtin_popcountll(n)
 #define debug(x) cout << #x << " = " << x << "\n";
 #define mp make_pair
 #define eb emplace_back
@@ -41,41 +41,71 @@ void out(T&&... args) { ((cout << args), ...);}
 #define se second
 #define INF 2e18
 
-// This Sol^n is Currently Giving TLE
-
-int n;
-vvi dp;
-vector<vb> arr;
-
-bool check(int i, int j) {
-  if(i > n or j > n) return false;
-  
-  if(i == n && j == n) return true;
-  
-  if(dp[i][j] != -1) return dp[i][j];
-
-  if(!arr[i][j]) return dp[i][j] = false;
-  
-  if(check(i+1, j)) return dp[i][j] = true;
-  
-  if(check(i, j+1)) return dp[i][j] = true;
-  
-  return dp[i][j] = false;
-}
-
+// Space Optimized Knapsack.
 void solve() {
-  inp(n);
+  int n, w;
+  inp(n, w);
 
-  arr.assign(n+1, vb(n+1, true));
-  int x, y;
+  vi val(n+1), weight(n+1);
+  f(i, 1, n) inp(val[i]);
+  f(i, 1, n) inp(weight[i]);
+  
+  vi dp(w+1, 0);
   f(i, 1, n) {
-    inp(x, y);
-    arr[x][y] = false;
+    fr(j, w, weight[i]) {
+      dp[j] = max(dp[j], val[i] + dp[j - weight[i]]);
+    }
   }
 
-  dp.assign(n+1, vi(n+1, -1));
-  if(check(1, 1)) py
-  else pn;
+  out(dp[w], br);
+}
+
+// KnapSack With Different Variant. (Needs to fix it)
+void solve2() {
+  int n, w;
+  inp(n, w);
+
+  vi val(n+1), weight(n+1);
+  f(i, 1, n) inp(val[i]);
+  f(i, 1, n) inp(weight[i]);
+
+  ll mxval = accumulate(all(val), 0LL);
+
+  vi dp(mxval+1, inf);
+  dp[0] = 0;
+
+  f(i, 1, n) {
+    fr(j, mxval - val[i], 0) {
+      dp[j + val[i]] = min(dp[j + val[i]], weight[i] + dp[j]);
+    }
+  }
+
+  int ans;
+  f(i, 0, mxval) {
+    if(dp[i] <= w) ans = i;
+  }
+  
+  out(ans, br);
+}
+
+// unbounded knapsack
+void solve3() {
+  int n, w;
+  inp(n, w);
+
+  vi val(n+1), weight(n+1);
+  f(i, 1, n) inp(val[i]);
+  f(i, 1, n) inp(weight[i]);
+  
+  vi dp(w+1, 0);
+  f(i, 1, w) {
+    f(j, 1, n) {
+      if(weight[j] > i) continue;
+      dp[i] = max(dp[i], val[j] + dp[i - weight[j]]);
+    }
+  }
+
+  out(dp[w], br);
 }
 
 int main() {
@@ -91,11 +121,11 @@ int main() {
 
   clock_t begin = clock();
 
-  int t;
-  cin >> t;
+  int t = 1;
+  // cin >> t;
 
   while(t--) {
-    solve();
+    solve2();
   }
 
   #ifndef ONLINE_JUDGE

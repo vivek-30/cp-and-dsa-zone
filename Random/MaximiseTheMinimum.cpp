@@ -41,41 +41,40 @@ void out(T&&... args) { ((cout << args), ...);}
 #define se second
 #define INF 2e18
 
-// This Sol^n is Currently Giving TLE
-
-int n;
-vvi dp;
-vector<vb> arr;
-
-bool check(int i, int j) {
-  if(i > n or j > n) return false;
-  
-  if(i == n && j == n) return true;
-  
-  if(dp[i][j] != -1) return dp[i][j];
-
-  if(!arr[i][j]) return dp[i][j] = false;
-  
-  if(check(i+1, j)) return dp[i][j] = true;
-  
-  if(check(i, j+1)) return dp[i][j] = true;
-  
-  return dp[i][j] = false;
-}
-
 void solve() {
-  inp(n);
+  int n, k;
+  inp(n, k);
+  
+  vi a(n+1), b(n+1);
+  f(i, 1, n) inp(a[i]);
+  f(i, 1, n) inp(b[i]);
 
-  arr.assign(n+1, vb(n+1, true));
-  int x, y;
-  f(i, 1, n) {
-    inp(x, y);
-    arr[x][y] = false;
+  int dp[n+1][k+1][1601];
+  memset(dp, -1, sizeof dp);
+
+  f(i, 0, n){
+    f(j, 0, k) {
+      f(s, 0, 1600) {
+        dp[i][0][0] = 0;
+      }
+    }
   }
 
-  dp.assign(n+1, vi(n+1, -1));
-  if(check(1, 1)) py
-  else pn;
+  f(i, 1, n) {
+    f(j, 1, k) {
+      f(s, 0, 1600) {
+        dp[i][j][s] = dp[i-1][j][s];
+        if(s - a[i] >= 0 and dp[i-1][j-1][s - a[i]] != -1)
+          dp[i][j][s] = max(dp[i][j][s], b[i] + dp[i-1][j-1][s - a[i]]);
+      }
+    }
+  }
+
+  int ans = minf;
+  f(i, 0, 1600) {
+    ans = max(ans, min(dp[n][k][i], (int)i));
+  }
+  out(ans, br);
 }
 
 int main() {
