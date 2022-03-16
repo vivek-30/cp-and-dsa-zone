@@ -60,7 +60,7 @@ void solve() {
   out(dp[w], br);
 }
 
-// KnapSack With Different Variant. (Needs to fix it)
+// KnapSack With Different Variant.
 void solve2() {
   int n, w;
   inp(n, w);
@@ -69,22 +69,33 @@ void solve2() {
   f(i, 1, n) inp(val[i]);
   f(i, 1, n) inp(weight[i]);
 
-  ll mxval = accumulate(all(val), 0LL);
+  ll sum = accumulate(all(val), 0LL);
 
-  vi dp(mxval+1, inf);
-  dp[0] = 0;
+  vvll dp(n+1, vll(sum+1, inf));
 
+  dp[0][0] = 0;
   f(i, 1, n) {
-    fr(j, mxval - val[i], 0) {
-      dp[j + val[i]] = min(dp[j + val[i]], weight[i] + dp[j]);
+    dp[i][0] = 0;
+  }
+
+  dp[1][val[1]] = weight[1];
+  f(i, 2, n) {
+    f(j, 1, sum) {
+      dp[i][j] = dp[i-1][j];
+      if(val[i] <= j) {
+        dp[i][j] = min(dp[i][j], weight[i] + dp[i-1][j-val[i]]);
+      }
     }
   }
 
-  int ans;
-  f(i, 0, mxval) {
-    if(dp[i] <= w) ans = i;
+  ll ans;
+  fr(i, sum, 0) {
+    if(dp[n][i] <= w) {
+      ans = i;
+      break;
+    }
   }
-  
+
   out(ans, br);
 }
 
