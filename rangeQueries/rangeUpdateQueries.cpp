@@ -1,144 +1,166 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define null NULL
-#define endl "\n"
 #define inf INT_MAX
 #define minf INT_MIN
 #define mod 1000000007
 #define ll long long int
+#define ld long double
 #define all(v) v.begin(), v.end()
-typedef pair<int,int> pii;
-typedef pair<ll,ll> pll;
-typedef vector<pii > vii;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+typedef vector<pii> vii;
 typedef vector<int> vi;
 typedef vector<ll> vll;
 typedef vector<string> vs;
 typedef vector<bool> vb;
-typedef vector<vi > vvi;
-typedef vector<vll > vvll;
+typedef vector<vi> vvi;
+typedef vector<vll> vvll;
 typedef map<int, int> mii;
 typedef map<char, int> mci;
-template<typename... T>
-void inp(T&... args) { ((cin >> args), ...);}
-template<typename... T>
-void out(T&&... args) { ((cout << args), ...);}
+template <typename... T>
+void inp(T &...args) { ((cin >> args), ...); }
+template <typename... T>
+void out(T &&...args) { ((cout << args), ...); }
 #define mid(l, r) (l + (r - l) / 2)
-#define f(i, s, e) for(ll i = s; i <= e; i++)
-#define fr(i, s, e) for(ll i = s; i >= e; i--)
-#define logarr(s, e, arr) for(int i = s; i <= e; i++) cout<<arr[i]<<" "; cout<<endl;
-#define bitc(n) __builtin_popcount(n)
+#define f(i, s, e) for (ll i = s; i <= e; i++)
+#define fr(i, s, e) for (ll i = s; i >= e; i--)
+#define logarr(s, e, arr) for (int i = s; i <= e; i++) cout << arr[i] << " ";cout << "\n";
+#define bitc(n) __builtin_popcountll(n)
+#define debug(x) cout << #x << " = " << x << "\n";
 #define mp make_pair
-#define pb push_back
+#define eb emplace_back
 #define sz size()
+#define br "\n"
 #define ump unordered_map
 #define pqmax priority_queue<int, vi>
-#define pqmin priority_queue<int, vi, greater<int> >
-#define py cout<<"YES"<<endl;
-#define pn cout<<"NO"<<endl;
+#define pqmin priority_queue<int, vi, greater<int>>
+#define py cout << "YES" << "\n";
+#define pn cout << "NO" << "\n";
 #define fi first
 #define se second
 #define INF 2e18
 
+#define N 200005
 #define Left (2 * idx)
 #define Right (2 * idx + 1)
 
-vll arr, tree, lazy;
+int n, q;
+vll arr(N), tree(4 * N), lazy(4 * N);
 
-void build(int idx, int s, int e) {
+void build(int idx, int s, int e)
+{
+  if (s > e)
+    return;
 
-  if(s == e) {
+  if (s == e)
+  {
     tree[idx] = arr[s];
     return;
   }
 
   int m = mid(s, e);
   build(Left, s, m);
-  build(Right, m+1, e);
+  build(Right, m + 1, e);
 
   tree[idx] = tree[Left] + tree[Right];
 }
 
-void rangeUpdate(int idx, int s, int e, int qs, int qe, int val) {
-  if(lazy[idx] != 0) {
-    tree[idx] += (e - s + 1) * lazy[idx]; 
-    if(s != e) {
+void update(int idx, int s, int e, int qs, int qe, int val)
+{
+
+  if (lazy[idx] != 0)
+  { 
+    tree[idx] += lazy[idx];
+
+    if (s != e)
+    {
       lazy[Left] += lazy[idx];
       lazy[Right] += lazy[idx];
     }
+
     lazy[idx] = 0;
   }
 
-  if(e < qs or s > qe) return;
+  if (s > e or s > qe or e < qs)
+    return;
 
-  if(s >= qs and e <= qe) {
-    tree[idx] += (e - s + 1)*val;
-    if(s != e) {
+  if (s >= qs and e <= qe)
+  {
+    tree[idx] += val;
+
+    if (s != e)
+    {
       lazy[Left] += val;
       lazy[Right] += val;
     }
+
     return;
   }
-
+  
   int m = mid(s, e);
-  rangeUpdate(Left, s, m, qs, qe, val);
-  rangeUpdate(Right, m+1, e, qs, qe, val);
+  update(Left, s, m, qs, qe, val);
+  update(1 + Left, m + 1, e, qs, qe, val);
 
   tree[idx] = tree[Left] + tree[Right];
 }
 
-int rangeQuery(int idx, int s, int e, int qs, int qe) {
-  if(e < qs or s > qe) return 0;
+ll query(int idx, int s, int e, int qs, int qe)
+{
 
-  if(lazy[idx] != 0) {
-    tree[idx] += (e - s + 1)*lazy[idx];
-    if(s != e) {
+  if (s > e or s > qe or e < qs)
+    return 0;
+
+  if (lazy[idx] != 0)
+  {
+    tree[idx] += lazy[idx]; 
+
+    if (s != e)
+    {
       lazy[Left] += lazy[idx];
       lazy[Right] += lazy[idx];
     }
+
     lazy[idx] = 0;
   }
 
-  if(s >= qs and e <= qe) return tree[idx];
+  if(s >= qs and e <= qe) {
+    return tree[idx];
+  }
 
   int m = mid(s, e);
-  return rangeQuery(Left, s, m, qs, qe) + rangeQuery(Right, m+1, e, qs, qe);
+  ll q1 = query(Left, s, m, qs, qe);
+  ll q2 = query(1 + Left, m + 1, e, qs, qe);
+
+  return q1 + q2;
 }
 
-void solve() {
-  int n, q;
+void solve()
+{
   inp(n, q);
+  f(i, 0, n-1) inp(arr[i]);
 
-  arr.resize(n+1), tree.resize(4*n);
-  lazy.assign(4*n, 0);
-
-  f(i, 1, n) {
-    inp(arr[i]);
-  }
+  build(1, 0, n - 1);
 
   while(q--) {
     int qt;
     inp(qt);
 
     if(qt == 1) {
-      
       int a, b, u;
       inp(a, b, u);
-      rangeUpdate(1, 1, n, a, b, u);
 
+      update(1, 0, n-1, a-1, b-1, u);
     } else {
-      
       int k;
       inp(k);
-      out(rangeQuery(1, 1, n, k, k), '\n');
 
+      out(query(1, 0, n-1, k-1, k-1), br);
     }
   }
-
 }
 
 int main() {
-
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
