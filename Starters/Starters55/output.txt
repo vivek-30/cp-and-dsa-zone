@@ -1,4 +1,7 @@
-NO
-YES
-YES
-NO
+2211
+57
+2000000000
+0
+
+
+Executed In: 0.173 ms
