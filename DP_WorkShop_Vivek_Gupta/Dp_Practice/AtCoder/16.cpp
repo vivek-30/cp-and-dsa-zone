@@ -1,0 +1,100 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define inf 2e18
+#define minf -2e18
+#define mod 1000000007
+#define int long long int
+#define ld long double
+#define all(v) v.begin(), v.end()
+typedef vector<int> vi;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef pair<int,int> pii;
+typedef vector<pii> vii;
+typedef vector<vi> vvi;
+typedef map<int, int> mii;
+typedef map<char, int> mci;
+template<typename... T>
+void inp(T&... args) { ((cin >> args), ...);}
+template<typename... T>
+void out(T&&... args) { ((cout << args), ...);}
+#define mid(l, r) (l + (r - l) / 2)
+#define f(i, s, e) for(int i = s; i <= e; i++)
+#define fr(i, s, e) for(int i = s; i >= e; i--)
+#define logarr(s, e, arr) for(int i = s; i <= e; i++) cout << arr[i] << " ";  cout << "\n";
+#define bitc(n) __builtin_popcountll(n)
+#define debug(x) cout << #x << " = " << x << "\n";
+#define mp make_pair
+#define eb emplace_back
+#define sz size()
+#define br "\n"
+#define ump unordered_map
+#define pqmax priority_queue<int, vi>
+#define pqmin priority_queue<int, vi, greater<int> >
+#define py cout << "YES" << "\n";
+#define pn cout << "NO" << "\n";
+#define fi first
+#define se second
+
+void dfs(int src, int parent, vvi &dp, vi g[]) {
+  dp[0][src] = dp[1][src] = 1;
+
+  for(int child: g[src]) {
+    if(child != parent) {
+      dfs(child, src, dp, g);
+      dp[0][src] = (dp[0][src] * dp[1][child])%mod;
+      dp[1][src] = (dp[1][src] * ((dp[0][child] + dp[1][child]) % mod))%mod;
+    }
+  }
+}
+
+void solve(int tc) {
+  int n;
+  inp(n);
+
+  vi g[n+1];
+  f(i, 2, n) {
+    int x, y;
+    inp(x, y);
+
+    g[x].eb(y);
+    g[y].eb(x);
+  }
+
+  // 0 => Black Color
+  // 1 => White Color
+
+  vvi dp(2, vi(n+1));
+  dfs(1, -1, dp, g);
+
+  out((dp[0][1] + dp[1][1]) % mod, br);
+}
+
+int32_t main() {
+
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
+  cout.tie(0);
+
+  #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+  #endif
+
+  clock_t begin = clock();
+
+  int tc = 1;
+  // cin >> tc;
+
+  f(t, 1, tc) {
+    solve(t);
+  }
+
+  #ifndef ONLINE_JUDGE
+    clock_t end = clock();
+    cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";
+  #endif
+
+  return 0;
+}
