@@ -1,0 +1,13 @@
+3
+3
+bbcab
+aa
+aab
+3
+bbc
+bcaa
+abb
+3
+aa
+acc
+abbca
