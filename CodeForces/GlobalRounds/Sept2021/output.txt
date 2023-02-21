@@ -1,0 +1,77 @@
+Array NO: 1
+0 1
+0 1
+Array NO: 1
+0 1
+0 1
+Array NO: 2
+2 2
+2 2
+Array NO: 3
+4 3
+4 3
+Array NO: 1
+3 1
+3 1
+3 1
+Array NO: 2
+6 1
+6 1
+6 1
+Array NO: 3
+0 3
+0 3
+0 3
+Array NO: 1
+0 1
+0 1
+Array NO: 2
+3 1
+3 1
+Array NO: 1
+4 3
+4 3
+Array NO: 2
+1 50
+1 50
+Array NO: 3
+3 50
+3 50
+Array NO: 4
+6 50
+6 50
+Array NO: 1
+4 2
+4 2
+Array NO: 2
+0 6
+0 6
+Array NO: 3
+2 6
+2 6
+Array NO: 4
+7 6
+7 6
+Array NO: 1
+0 1
+0 1
+0 1
+0 1
+0 1
+0 1
+0 1
+0 1
+0 1
+Array NO: 2
+2 3
+2 3
+2 3
+2 3
+2 3
+2 3
+2 3
+2 3
+2 3
+
+
+Executed In: 0.32 ms
